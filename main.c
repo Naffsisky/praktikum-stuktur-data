@@ -1,6 +1,21 @@
 // Prinafsika
 // 21081010278
 
+/*
+--- TEST ---
+case :
+1. food-elec-chem   *DONE
+2. chem-elec-food   *DONE
+3. food-food-chem   (NOT PASSED)    *DONE
+4. chem-chem-food   (NOT PASSED)    *DONE
+5. elec-food-food   *DONE
+6. food-food-elec   *DONE
+7. elec-chem-chem   *DONE
+8. chem-chem-elec   *DONE
+9. elec-chem-food   (NOT PASSED)    *DONE
+10. food-chem-elec  (NOT PASSED)    *DONE
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,7 +26,7 @@ void delete();
 void sort();
 void send();
 
-int berat_max = 30;
+int berat_max = 30; // limit container
 int berat_now = 0;
 int kirim = 0;
 int total_container = 0;
@@ -300,6 +315,7 @@ void send(){
             break;
             case 2:
                 printf("Kereta tidak dikirim!\n");
+                return;
             break;
             default:
                 printf("Pilihan tidak ada!\n");
@@ -309,17 +325,55 @@ void send(){
     }
     else{
         struct node* pwalker = phead;
-        printf("Membandingkan Makanan tidak boleh dekat dengan Bahan Kimia!\n\n");
-        while (pwalker != NULL){
-            if (strcmp(pwalker->food, "Makanan") == 0){
-                if (strcmp(pwalker->next->chem, "Bahan Kimia") == 0){
-                    printf("Makanan tidak boleh dekat dengan Bahan Kimia!\n");
-                    printf("Silahkan tunggu pada pengiriman selanjutnya!\n\n");
-                    return;
+        printf("[WARN!] Sorting membandingkan makanan tidak boleh dekat dengan Bahan Kimia!\n\n");
+        while (pwalker->next != NULL){
+            if (strcmp(pwalker->food, "Makanan") == 0 && strcmp(pwalker->next->chem, "Bahan Kimia") == 0){
+                printf("Makanan tidak boleh dekat dengan Bahan Kimia!\n");
+                printf("Apakah anda yakin ingin mengirim?\n");
+                printf("1. Ya\n");
+                printf("2. Tidak\n");
+                printf("Pilih : ");
+                scanf("%d", &pilih);
+                switch (pilih){
+                    case 1:
+                        system("clear");
+                        goto send;
+                    break;
+                    case 2:
+                        printf("Kereta tidak dikirim!\n");
+                        return;
+                    break;
+                    default:
+                        printf("Pilihan tidak ada!\n");
+                        return;
+                    break;
+                }
+            }
+            else if (strcmp(pwalker->chem, "Bahan Kimia") == 0 && strcmp(pwalker->next->food, "Makanan") == 0){
+                printf("Makanan tidak boleh dekat dengan Bahan Kimia!\n");
+                printf("Apakah anda yakin ingin mengirim?\n");
+                printf("1. Ya\n");
+                printf("2. Tidak\n");
+                printf("Pilih : ");
+                scanf("%d", &pilih);
+                switch (pilih){
+                    case 1:
+                        system("clear");
+                        goto send;
+                    break;
+                    case 2:
+                        printf("Kereta tidak dikirim!\n");
+                        return;
+                    break;
+                    default:
+                        printf("Pilihan tidak ada!\n");
+                        return;
+                    break;
                 }
             }
             pwalker = pwalker->next;
         }
+        send:
         printf("--------------------------------------------\n");
         printf("STATUS\t: Kereta berhasil dikirim!\n");
         printf("Berat\t: %d TONs\n", berat_now);
